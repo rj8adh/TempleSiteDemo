@@ -1,0 +1,151 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/playfair-display";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: 'Playfair Display Variable', serif;
+    --font-sans: 'Geist Variable', sans-serif;
+    --font-serif: 'Playfair Display Variable', serif;
+    --color-parchment: var(--parchment);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    /* ── Heritage saffron palette ─────────────────────────── */
+    --parchment:          oklch(0.960 0.026 80);   /* deep warm cream — page backgrounds */
+    --background:         oklch(0.975 0.018 82);   /* warm off-white — replaces pure white */
+    --foreground:         oklch(0.175 0.040 50);   /* warm dark brown — all body text */
+    --card:               oklch(0.990 0.010 80);   /* very slightly warm white — cards */
+    --card-foreground:    oklch(0.175 0.040 50);
+    --popover:            oklch(0.990 0.010 80);
+    --popover-foreground: oklch(0.175 0.040 50);
+    --primary:            oklch(0.660 0.230 48);   /* deep saffron/marigold */
+    --primary-foreground: oklch(0.990 0.005 80);   /* near-white on saffron */
+    --secondary:          oklch(0.950 0.022 78);   /* warm secondary */
+    --secondary-foreground: oklch(0.220 0.040 50);
+    --muted:              oklch(0.945 0.020 78);   /* warm muted surface */
+    --muted-foreground:   oklch(0.480 0.040 52);   /* warm medium-gray text */
+    --accent:             oklch(0.945 0.020 78);
+    --accent-foreground:  oklch(0.220 0.040 50);
+    --destructive:        oklch(0.540 0.240 27);   /* deep red for errors */
+    --border:             oklch(0.870 0.022 72);   /* warm tan border */
+    --input:              oklch(0.870 0.022 72);
+    --ring:               oklch(0.660 0.230 48);   /* saffron focus ring */
+    --chart-1:            oklch(0.660 0.230 48);
+    --chart-2:            oklch(0.580 0.200 38);
+    --chart-3:            oklch(0.700 0.180 70);
+    --chart-4:            oklch(0.760 0.140 85);
+    --chart-5:            oklch(0.820 0.080 75);
+    --radius: 0.625rem;
+    --sidebar:            oklch(0.990 0.010 80);
+    --sidebar-foreground: oklch(0.175 0.040 50);
+    --sidebar-primary:    oklch(0.660 0.230 48);
+    --sidebar-primary-foreground: oklch(0.990 0.005 80);
+    --sidebar-accent:     oklch(0.945 0.020 78);
+    --sidebar-accent-foreground: oklch(0.220 0.040 50);
+    --sidebar-border:     oklch(0.870 0.022 72);
+    --sidebar-ring:       oklch(0.660 0.230 48);
+}
+
+.dark {
+    --parchment:          oklch(0.185 0.018 55);
+    --background:         oklch(0.155 0.020 50);   /* deep warm brown-black */
+    --foreground:         oklch(0.970 0.010 82);   /* warm off-white text */
+    --card:               oklch(0.195 0.018 52);
+    --card-foreground:    oklch(0.970 0.010 82);
+    --popover:            oklch(0.195 0.018 52);
+    --popover-foreground: oklch(0.970 0.010 82);
+    --primary:            oklch(0.720 0.220 52);   /* bright saffron in dark mode */
+    --primary-foreground: oklch(0.120 0.020 50);
+    --secondary:          oklch(0.255 0.025 52);
+    --secondary-foreground: oklch(0.970 0.010 82);
+    --muted:              oklch(0.255 0.025 52);
+    --muted-foreground:   oklch(0.680 0.030 60);
+    --accent:             oklch(0.255 0.025 52);
+    --accent-foreground:  oklch(0.970 0.010 82);
+    --destructive:        oklch(0.680 0.200 22);
+    --border:             oklch(1 0 0 / 12%);
+    --input:              oklch(1 0 0 / 16%);
+    --ring:               oklch(0.720 0.220 52);
+    --chart-1:            oklch(0.720 0.220 52);
+    --chart-2:            oklch(0.640 0.190 38);
+    --chart-3:            oklch(0.760 0.160 70);
+    --chart-4:            oklch(0.800 0.130 85);
+    --chart-5:            oklch(0.850 0.075 80);
+    --sidebar:            oklch(0.195 0.018 52);
+    --sidebar-foreground: oklch(0.970 0.010 82);
+    --sidebar-primary:    oklch(0.720 0.220 52);
+    --sidebar-primary-foreground: oklch(0.120 0.020 50);
+    --sidebar-accent:     oklch(0.255 0.025 52);
+    --sidebar-accent-foreground: oklch(0.970 0.010 82);
+    --sidebar-border:     oklch(1 0 0 / 12%);
+    --sidebar-ring:       oklch(0.720 0.220 52);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
+  html {
+    @apply font-sans;
+    }
+  /* Ensure form controls always use the semantic foreground color,
+     preventing any hardcoded ancestor text-color from bleeding in */
+  input, textarea, select {
+    color: var(--foreground);
+  }
+}
+
+@layer utilities {
+  .card-glow {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, ring-color 0.3s ease;
+  }
+  .card-glow:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 36px -6px oklch(0.660 0.230 48 / 0.45);
+  }
+}
