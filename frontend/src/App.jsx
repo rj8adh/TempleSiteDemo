@@ -74,6 +74,7 @@ function App() {
                 <Route path='/privacy-policy' element={<PrivacyPage />} />
                 <Route path='/settings' element={user ? <SettingsPage /> : <Navigate to='/login' />} />
                 <Route path='/terms-of-service' element={<TermsPage />} />
+                <Route path='*' element={<Navigate to='/' replace />} />
             </Routes>
             <Footer />
             <Toaster position='top-center' reverseOrder={false} />
