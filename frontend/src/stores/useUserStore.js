@@ -1,7 +1,25 @@
 import { create } from "zustand";
-import { account, databases, OAuthProvider, DATABASE_ID, FAMILY_COLLECTION_ID } from "../appwrite";
+import { account, databases, OAuthProvider, DATABASE_ID, FAMILY_COLLECTION_ID, APP_ORIGIN } from "../appwrite";
 import { ID, Query } from "appwrite";
 import { toast } from "react-hot-toast";
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const getAuthStatus = async () => {
+    const sessionUser = await account.get();
+    const prefs = await account.getPrefs();
+
+    return {
+        _id: sessionUser.$id,
+        name: sessionUser.name,
+        email: sessionUser.email,
+        role: prefs.role || "customer",
+        gotra: prefs.gotra || "",
+        rashi: prefs.rashi || "",
+        birthday: prefs.birthday || null,
+        family: []
+    };
+};
 
 export const useUserStore = create((set, get) => ({
     user: null,
@@ -11,27 +29,34 @@ export const useUserStore = create((set, get) => ({
     // Replaces getProfile and protectRoute cookie verification loops
     checkAuth: async () => {
         set({ checkingAuth: true });
-        try {
-            const sessionUser = await account.get();
 
-            // Fetch metadata from the user preference payload
-            const prefs = await account.getPrefs();
+        // Safari/Firefox/mobile can be slightly behind after OAuth redirect.
+        // Retry a few times before treating user as logged out.
+        const delays = [0, 150, 350, 700];
 
-            set({
-                user: {
-                    _id: sessionUser.$id,
-                    name: sessionUser.name,
-                    email: sessionUser.email,
-                    role: prefs.role || "customer",
-                    gotra: prefs.gotra || "",
-                    rashi: prefs.rashi || "",
-                    birthday: prefs.birthday || null,
-                    family: [] // We populate this via fetchFamilyMembers below
-                },
-                checkingAuth: false
-            });
-        } catch (error) {
-            set({ checkingAuth: false, user: null });
+        for (let i = 0; i < delays.length; i++) {
+            if (delays[i] > 0) await wait(delays[i]);
+
+            try {
+                const hydratedUser = await getAuthStatus();
+                set({
+                    user: hydratedUser,
+                    checkingAuth: false,
+                    loading: false
+                });
+                return;
+            } catch (error) {
+                const status = error?.code || error?.response?.status;
+                const isLastAttempt = i === delays.length - 1;
+
+                if (!isLastAttempt && (status === 401 || status === 403)) {
+                    continue;
+                }
+
+                if (isLastAttempt) {
+                    set({ checkingAuth: false, loading: false, user: null });
+                }
+            }
         }
     },
 
@@ -80,8 +105,8 @@ export const useUserStore = create((set, get) => ({
             // Syncing cart logic to the server side table (we'll implement this next)
             // for (const item of guestItems) { ... }
 
-            toast.success("Logged in successfully!");
             await get().checkAuth();
+            toast.success("Logged in successfully!");
         } catch (error) {
             set({ loading: false });
             toast.error(error.message || "Invalid email or password");
@@ -89,9 +114,10 @@ export const useUserStore = create((set, get) => ({
     },
 
     loginWithGoogle: () => {
-        const appUrl = import.meta.env.VITE_APP_URL || window.location.origin;
-        const successUrl = import.meta.env.VITE_APPWRITE_SUCCESS_URL || appUrl;
-        const failureUrl = import.meta.env.VITE_APPWRITE_FAILURE_URL || `${appUrl}/login?error=google_failed`;
+        // Keep redirects on a single canonical origin to prevent cookie/session mismatches
+        // across browsers (especially Safari/Firefox and mobile webviews).
+        const successUrl = import.meta.env.VITE_APPWRITE_SUCCESS_URL || APP_ORIGIN;
+        const failureUrl = import.meta.env.VITE_APPWRITE_FAILURE_URL || `${APP_ORIGIN}/login?error=google_failed`;
 
         // Direct handling of OAuth redirects handled natively by Appwrite edge locations
         account.createOAuth2Session(
