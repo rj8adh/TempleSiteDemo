@@ -16,6 +16,7 @@ export const EVENT_COLLECTION_ID = import.meta.env.VITE_APPWRITE_EVENT_COLLECTIO
 export const ARTICLE_COLLECTION_ID = import.meta.env.VITE_APPWRITE_ARTICLE_COLLECTION_ID;
 export const FAMILY_COLLECTION_ID = import.meta.env.VITE_APPWRITE_FAMILY_COLLECTION_ID;
 export const STORAGE_BUCKET_ID = import.meta.env.VITE_APPWRITE_STORAGE_BUCKET_ID;
+export const APP_ORIGIN = (import.meta.env.VITE_APP_URL || window.location.origin).replace(/\/$/, "");
 
 export const account = new Account(client);
 export const databases = new Databases(client);
