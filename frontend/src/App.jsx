@@ -4,6 +4,7 @@ import { useUserStore } from "./stores/useUserStore";
 import { Toaster } from "react-hot-toast";
 import { Toaster as SonnerToaster } from "./components/ui/sonner";
 
+import AuthCallback from './components/AuthCallback';
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
@@ -64,6 +65,7 @@ function App() {
                     path='/purchase-cancel'
                     element={user ? <PurchaseCancelPage /> : <Navigate to='/login' />}
                 />
+                <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path='/orders' element={user ? <OrderHistoryPage /> : <Navigate to='/login' />} />
                 <Route path='/about' element={<AboutPage />} />
                 <Route path='/events' element={<EventsPage />} />
