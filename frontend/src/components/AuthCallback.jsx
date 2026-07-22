@@ -1,21 +1,31 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { account } from '../appwrite.js'; // Adjust this import to point to your appwrite.js file
+import { account } from '../appwrite.js'; // Adjust if needed
+import { useUserStore } from '../stores/useUserStore.js'; // MUST UPDATE TO YOUR ACTUAL PATH
 
 const AuthCallback = () => {
     const navigate = useNavigate();
+    // 1. Pull the checkAuth function from your Zustand store
+    const checkAuth = useUserStore((state) => state.checkAuth);
+    const hasRun = useRef(false);
 
     useEffect(() => {
-        // 1. Grab the URL parameters
+        // Prevent React strict mode double-firing
+        if (hasRun.current) return;
+        hasRun.current = true;
+
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get('userId');
         const secret = urlParams.get('secret');
 
         if (userId && secret) {
-            // 2. Finalize the session manually on your own domain
+            // 2. Consume the token to create the browser session
             account.createSession(userId, secret)
-                .then(() => {
-                    // Success! Send them to the homepage or dashboard
+                .then(async () => {
+                    // 3. Force Zustand to update the global user state!
+                    await checkAuth();
+                    
+                    // 4. Finally, push the user into the app
                     navigate('/'); 
                 })
                 .catch((error) => {
@@ -23,14 +33,13 @@ const AuthCallback = () => {
                     navigate('/login?error=session_failed');
                 });
         } else {
-            // If they land here without tokens, kick them back to login
             navigate('/login?error=missing_credentials');
         }
-    }, [navigate]);
+    }, [navigate, checkAuth]);
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', padding: '50px' }}>
-            <p>Logging you in...</p>
+            <p>Finalizing login...</p>
         </div>
     );
 };
