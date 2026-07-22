@@ -113,14 +113,12 @@ export const useUserStore = create((set, get) => ({
         }
     },
 
-    loginWithGoogle: () => {
-        // Keep redirects on a single canonical origin to prevent cookie/session mismatches
-        // across browsers (especially Safari/Firefox and mobile webviews).
+loginWithGoogle: () => {
         const successUrl = `${APP_ORIGIN}/auth/callback`;
         const failureUrl = `${APP_ORIGIN}/login?error=google_failed`;
 
-        // Direct handling of OAuth redirects handled natively by Appwrite edge locations
-        account.createOAuth2Session(
+        // Swapped to createOAuth2Token to bypass Safari's strict cookie blocking
+        account.createOAuth2Token(
             OAuthProvider.Google,
             successUrl,
             failureUrl
