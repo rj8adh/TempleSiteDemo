@@ -32,10 +32,8 @@ function App() {
 
     // 1. Verify session cookie on mount (runs exactly once)
     useEffect(() => {
-        // Prevent the global check if the user is actively processing a login token
-        if (!window.location.pathname.includes('/auth/callback')) {
-            checkAuth();
-        }
+        // Remove the URL check! Just run it directly.
+        checkAuth();
     }, [checkAuth]);
 
     if (checkingAuth) {
