@@ -465,30 +465,30 @@ const AdminPage = () => {
     useEffect(() => {
         const verifyAdminStatus = async () => {
             try {
-                // First, verify if they are even logged in at all
+                console.log("1. Checking if user is logged in...");
                 const sessionCheck = await account.get();
+                console.log("User session found:", sessionCheck.name);
 
-                if (!sessionCheck) {
-                    window.location.replace("/"); 
-                    return;
-                }
-
-                // 2. USE THE CORRECT APWRITE TEAMS API
+                console.log("2. Fetching team memberships...");
                 const teamsResponse = await teams.list();
-                
-                // 3. CHECK FOR YOUR EXACT TEAM ID FROM THE SCREENSHOT
+                console.log("Teams found:", teamsResponse.teams);
+
                 const userIsAdmin = teamsResponse.teams.some(t => 
                     t.$id === "6a50eae80013cfee754f" || t.name.toLowerCase() === "admin"
                 );
 
                 if (userIsAdmin) {
+                    console.log("3. Success! User belongs to the Admin team.");
                     setIsAuthorized(true);
                 } else {
-                    window.location.replace("/"); 
+                    console.warn("3. Failed: User is logged in, but is NOT in the admin team.");
+                    alert("Not authorized. Check console for team list.");
+                    // window.location.replace("/"); <-- Temporarily disabled
                 }
             } catch (err) {
-                console.error("Security verification failed:", err);
-                window.location.replace("/"); 
+                console.error("4. CRASH: The security verification threw an error:", err);
+                alert("Security check crashed. Check console for the exact error.");
+                // window.location.replace("/"); <-- Temporarily disabled
             }
         };
         verifyAdminStatus();
