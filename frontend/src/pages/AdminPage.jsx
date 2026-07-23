@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { account } from "../appwrite"; // Added for security routing guard
+import { account, teams } from "../appwrite"; // Added for security routing guard
 import {
     LayoutDashboard, Package, PlusCircle, ClipboardList,
     CalendarPlus, FileText, Trash2, Upload,
@@ -469,22 +469,26 @@ const AdminPage = () => {
                 const sessionCheck = await account.get();
 
                 if (!sessionCheck) {
-                    window.location.replace("/"); // Instant hard bounce for guests
+                    window.location.replace("/"); 
                     return;
                 }
 
-                // Next, verify if they belong to the admin team
-                const teamsResponse = await account.getTeams();
-                const userIsAdmin = teamsResponse.teams.some(t => t.name.toLowerCase() === "admin");
+                // 2. USE THE CORRECT APWRITE TEAMS API
+                const teamsResponse = await teams.list();
+                
+                // 3. CHECK FOR YOUR EXACT TEAM ID FROM THE SCREENSHOT
+                const userIsAdmin = teamsResponse.teams.some(t => 
+                    t.$id === "6a50eae80013cfee754f" || t.name.toLowerCase() === "admin"
+                );
 
                 if (userIsAdmin) {
                     setIsAuthorized(true);
                 } else {
-                    window.location.replace("/"); // Send away logged-in non-admins
+                    window.location.replace("/"); 
                 }
             } catch (err) {
                 console.error("Security verification failed:", err);
-                window.location.replace("/"); // Safe fallback catches unauthorized/guest sessions
+                window.location.replace("/"); 
             }
         };
         verifyAdminStatus();
