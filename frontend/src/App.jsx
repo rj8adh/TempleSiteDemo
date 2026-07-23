@@ -25,7 +25,7 @@ import FamilyPage from "./pages/FamilyPage"
 import PrivacyPage from "./pages/PrivacyPage";
 import SettingsPage from "./pages/SettingsPage";
 import TermsPage from "./pages/TermsPage";
-import AuthCallbackPage from "./pages/AuthCallbackPage";
+// import AuthCallbackPage from "./pages/AuthCallbackPage";
 
 function App() {
     const { user, checkAuth, checkingAuth } = useUserStore();
