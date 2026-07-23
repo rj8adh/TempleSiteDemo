@@ -1,5 +1,4 @@
-import { Client, Account, Databases, OAuthProvider, Storage } from 'appwrite'
-
+import { Client, Account, Databases, OAuthProvider, Storage, Teams } from 'appwrite'
 const client = new Client()
 
 client
@@ -21,5 +20,8 @@ export const APP_ORIGIN = (import.meta.env.VITE_APP_URL || window.location.origi
 export const account = new Account(client);
 export const databases = new Databases(client);
 export const storage = new Storage(client)
+
+export const teams = new Teams(client);
+
 export { OAuthProvider };
 export default client;
